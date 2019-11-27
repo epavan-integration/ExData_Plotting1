@@ -1,0 +1,12 @@
+library(dplyr)
+power_data <- subset(read.table(unz("exdata_data_household_power_consumption.zip", "household_power_consumption.txt"), sep=";", header = TRUE), Date == "1/2/2007"|Date == "2/2/2007" )
+power_data <- mutate(power_data, Datetime = paste(as.character(Date),as.character(Time), sep = " "))
+power_data$Datetime <- strptime(power_data$Datetime, "%d/%m/%Y %H:%M:%S")
+
+png(filename = "Plot3.png", width = 480, height = 480)
+plot(power_data$Datetime,as.numeric(gsub(",",".",power_data$Sub_metering_1)), col = "white", ylab = "Energy sub metering", xlab = "")
+lines(power_data$Datetime,as.numeric(gsub(",",".",power_data$Sub_metering_1)), col = "black")
+lines(power_data$Datetime,as.numeric(gsub(",",".",power_data$Sub_metering_2)), col = "red")
+lines(power_data$Datetime,as.numeric(gsub(",",".",power_data$Sub_metering_3)), col = "blue")
+legend("topright", legend= c("Sub_metering_1", "Sub_metering_2","Sub_metering_2"), col = c("black", "red", "blue"), lwd = 1)
+dev.off()
